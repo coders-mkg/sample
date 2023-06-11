@@ -1,0 +1,45 @@
+class Solution:
+    def maximumSumQueries(self, nums1, nums2, queries):
+        answer = [-1] * len(queries)
+
+        prefixSum1 = self.calculatePrefixSum(nums1)
+        prefixSum2 = self.calculatePrefixSum(nums2)
+
+        for i in range(len(queries)):
+            xi = queries[i][0]
+            yi = queries[i][1]
+
+            index1 = self.findLargestIndex(prefixSum1, xi)
+            index2 = self.findLargestIndex(prefixSum2, yi)
+
+            if index1 != -1 and index2 != -1:
+                answer[i] = prefixSum1[index1] + prefixSum2[index2]
+
+        return answer
+
+    def calculatePrefixSum(self, nums):
+        prefixSum = []
+        totalSum = 0
+
+        for num in nums:
+            totalSum += num
+            prefixSum.append(totalSum)
+
+        return prefixSum
+
+    def findLargestIndex(self, nums, target):
+        left = 0
+        right = len(nums) - 1
+        result = -1
+
+        while left <= right:
+            mid = left + (right - left) // 2
+            num = nums[mid]
+
+            if num >= target:
+                result = mid
+                right = mid - 1
+            else:
+                left = mid + 1
+
+        return result
